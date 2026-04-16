@@ -22,7 +22,7 @@
                     var g = event.gamma;
 
                     orientation.innerHTML="a= " + a + "b= " + b + "g= " + g;
-                    document.getElementById("arrow").style.transform(rotate(a))
+                    document.getElementById("arrow").setAttribute("transform", 'rotate(${a})')
                     },false)
                 }
             }
