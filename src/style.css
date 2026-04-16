@@ -1,36 +1,47 @@
+body {
+  background-color: #2e2d2f;
+  margin: -3vh;
+}
+
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.container div {
-  padding: 2vh;
+  height: 100vh;
+  margin: 0;
 }
 
 .text {
     text-align: center;
-    width: 50vw;
-    margin: auto;
+    width: 66vw;
     color: #dfdbe6;
+    margin-top: 0;
 }
-body {
-  background-color: #2e2d2f;
+
+.arrowbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  aspect-ratio: 1;
+  background-color: #540759;
+  margin: 3vh;
 }
 
 .arrow {
-  height: 60vh;
-  width: 85vmin;
-  padding: 5vh;
+  height: 75%;
+  width: 75%;
+  transform-origin: 50%, 50%;
+  transform: rotate(45deg);
 }
 
 .button {
   background-color: #cac6d0;
   color: #2e2d2f;
-  padding: 1vh;
   border-radius: 1vh;
   width: 30vw;
   border: none;
   cursor: pointer;
   min-width: 100px;
+  height: 7vh;
 }
