@@ -21,8 +21,8 @@
                     var b = event.beta;
                     var g = event.gamma;
 
-                    orientation.innerHTML="a= " + a + "b= " + b + "g= " + g;
-                    document.getElementById("arrow").style.cssText = "transform: rotate(90);";
+                    orientation.innerHTML="a= " + a;
+                    document.getElementById("arrow").setAttribute('transform', 'rotate(90)');
                     },false)
                 }
             }
