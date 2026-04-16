@@ -1,4 +1,5 @@
 function main() {
+  document.getElementById("button").addEventListener("click", perm);
 }
 
 export async function perm(){
@@ -20,4 +21,3 @@ export async function perm(){
 }
 
 main();
-perm();
