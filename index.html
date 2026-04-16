@@ -22,14 +22,14 @@
                     var g = event.gamma;
 
                     orientation.innerHTML="a= " + a + "b= " + b + "g= " + g;
-                    document.getElementById("arrow").setAttribute("transform", `rotate(${a})`)
+                    document.getElementById("arrow").style.cssText = "transform: rotate(" + a + ");"
                     },false)
                 }
             }
         </script>
         <script>console.log("hey");</script>
     </head>
-    <body onload = "init()">
+    <body>
         <div class="container">
             <div class="text">
                 <h1>AdventurePass</h1>
