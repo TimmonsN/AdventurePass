@@ -5,7 +5,6 @@
 }
 
 .container div {
-  margin: auto;
   padding: 2vh;
 }
 
@@ -20,8 +19,9 @@ body {
 }
 
 .arrow {
-  height: 66vh;
-  width: 50vh;
+  height: 60vh;
+  width: 85vmin;
+  padding: 5vh;
 }
 
 .button {
@@ -32,4 +32,5 @@ body {
   width: 30vw;
   border: none;
   cursor: pointer;
+  min-width: 100px;
 }
