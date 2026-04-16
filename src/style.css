@@ -28,7 +28,7 @@ h1 {
   justify-content: center;
   flex-grow: 1;
   aspect-ratio: 1;
-  max-width: 96vw;
+  max-width: 95%;
   background-color: #540759;
   margin: 3vh;
 }
