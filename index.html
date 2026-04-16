@@ -3,33 +3,7 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="src/style.css">
-        <!-- <script type="module" src="src/main.js"></script> -->
-        <script>
-            async function perm(){
-                const arrow = document.getElementById("arrow");
-                
-                try {
-                    permission = await DeviceOrientationEvent.requestPermission();
-                } catch (error) {
-                    permission = "granted";
-                }
-            
-                console.log("it worked");
-                var orientation = document.getElementById("compass");
-
-                if (window.DeviceOrientationEvent){
-                    window.addEventListener('deviceorientation', function(event){
-                    var a = event.alpha;
-                    var b = event.beta;
-                    var g = event.gamma;
-
-                    orientation.innerHTML="a= " + a;
-                    arrow.setAttribute('style', 'transform:rotate('+ a +'deg);');
-                    },false)
-                }
-            }
-        </script>
-        <script>console.log("hey");</script>
+        <script type="module" src="/src/main.js"></script>
     </head>
     <body>
         <div class="container">
@@ -43,7 +17,7 @@
                     <path opacity="1" d="M53.4395 5.0407C56.7319 -1.68022 66.3118 -1.68024 69.6042 5.04069L122.087 112.176C125.922 120.004 117.499 128.167 109.794 124.09L65.7318 100.77C63.0982 99.3761 59.9455 99.3761 57.3119 100.77L13.2493 124.09C5.54422 128.167 -2.87801 120.004 0.957055 112.176L53.4395 5.0407Z" fill="#dfdbe6"/>
                 </svg>
             </div>
-            <button class="button" onclick="perm()">Exit</button>  
+            <button class="button" id="button">Exit</button>  
           </div>
     </body>
 </html>

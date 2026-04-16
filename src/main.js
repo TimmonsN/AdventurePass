@@ -1,26 +1,29 @@
 function main() {
-    console.log("Hello World");
+    document.getElementById("button").addEventListener("click", perm);
 }
-export async function init(){
+
+export async function perm(){
+  const arrow = document.getElementById("arrow");
+  
+  // try {
+  //     let permission = await DeviceOrientationEvent.requestPermission();
+  // } catch (error) {
+  //     let permission = "granted";
+  // }
+
   console.log("it worked");
   var orientation = document.getElementById("compass");
-  var test = document.getElementById("test")
-  test.innerHTML="bye"
-  
-  try {
-    permission = await DeviceOrientationEvent.requestPermission();
-  } catch (error) {
-    permission = "granted";
-  }
 
   if (window.DeviceOrientationEvent){
-    window.addEventListener('deviceorientation', function(event){
+      window.addEventListener('deviceorientation', function(event){
       var a = event.alpha;
       var b = event.beta;
       var g = event.gamma;
 
-      orientation.innerhtml="a= " + a + "b= " + b + "g= " + g;
-    },false)
+      orientation.innerHTML="a= " + a;
+      arrow.setAttribute('style', 'transform:rotate('+ a +'deg);');
+      },false)
   }
 }
+
 main();

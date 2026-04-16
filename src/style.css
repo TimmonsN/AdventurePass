@@ -1,6 +1,10 @@
 body {
   background-color: #2e2d2f;
-  margin: -3vh;
+  margin: 0;
+}
+
+h1 {
+  margin: 0;
 }
 
 .container {
@@ -31,7 +35,7 @@ body {
 .arrow {
   height: 75%;
   width: 75%;
-  transform-origin: 50%, 50%;
+  transform-origin: 50% 50%;
   transform: rotate(45deg);
 }
 
