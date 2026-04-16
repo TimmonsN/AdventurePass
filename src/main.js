@@ -5,7 +5,7 @@ async function init(){
   console.log("it worked");
   var orientation = document.getElementById("compass");
   var test = document.getElementById("test")
-  test.innerHTML="hello"
+  test.innerHTML="bye"
   
   try {
     permission = await DeviceOrientationEvent.requestPermission();
