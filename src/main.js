@@ -14,7 +14,7 @@ export async function perm(){
       var b = event.beta;
       var g = event.gamma;
 
-      //orientation.innerHTML="a= " + a;
+      orientation.innerHTML="a= " + a;
       arrow.setAttribute('style', 'transform:rotate('+ a +'deg);');
       },false)
   }
