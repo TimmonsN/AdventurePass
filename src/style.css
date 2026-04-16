@@ -15,11 +15,19 @@ h1 {
   margin: 0;
 }
 
+.container div{
+  margin: 0;
+}
+
 .text {
-    text-align: center;
-    width: 66vw;
-    color: #dfdbe6;
-    margin-top: 0;
+  text-align: center;
+  width: 66vw;
+  color: #dfdbe6;
+  margin-top: 0;
+}
+
+input {
+  margin: 0;
 }
 
 .boxbox {
@@ -28,7 +36,8 @@ h1 {
   justify-content: center;
   flex-grow: 1;
   width: 100%;
-  background-color: #540759;
+  background-color: #021c48;
+  margin: 0;
 }
 
 .arrowbox {
