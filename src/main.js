@@ -1,15 +1,8 @@
 function main() {
-    document.getElementById("button").addEventListener("click", perm);
 }
 
 export async function perm(){
   const arrow = document.getElementById("arrow");
-  
-  // try {
-  //     let permission = await DeviceOrientationEvent.requestPermission();
-  // } catch (error) {
-  //     let permission = "granted";
-  // }
 
   console.log("it worked");
   var orientation = document.getElementById("compass");
@@ -20,10 +13,11 @@ export async function perm(){
       var b = event.beta;
       var g = event.gamma;
 
-      orientation.innerHTML="a= " + a;
+      //orientation.innerHTML="a= " + a;
       arrow.setAttribute('style', 'transform:rotate('+ a +'deg);');
       },false)
   }
 }
 
 main();
+perm();
