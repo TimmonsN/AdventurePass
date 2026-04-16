@@ -1,11 +1,11 @@
 function main() {
     console.log("Hello World");
 }
-async function init(){
+export async function init(){
   console.log("it worked");
   var orientation = document.getElementById("compass");
   var test = document.getElementById("test")
-  test.innerHTML="hello"
+  test.innerHTML="bye"
   
   try {
     permission = await DeviceOrientationEvent.requestPermission();
