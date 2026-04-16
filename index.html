@@ -14,8 +14,6 @@
             
                 console.log("it worked");
                 var orientation = document.getElementById("compass");
-                var test = document.getElementById("test")
-                test.innerHTML="bye"
 
                 if (window.DeviceOrientationEvent){
                     window.addEventListener('deviceorientation', function(event){
@@ -24,6 +22,7 @@
                     var g = event.gamma;
 
                     orientation.innerHTML="a= " + a + "b= " + b + "g= " + g;
+                    document.getElementById("arrow").style.rotate(a)
                     },false)
                 }
             }
@@ -37,9 +36,8 @@
                 <input type="text" placeholder="Where to?" id="destination">
             </div> 
             <p class="compass" id="compass"></p>
-            <p id="test"></p>
             <div class="arrowbox">
-                <svg class="arrow" viewBox="0 0 124 126" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="arrow" id="arrow" viewBox="0 0 124 126" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path opacity="1" d="M53.4395 5.0407C56.7319 -1.68022 66.3118 -1.68024 69.6042 5.04069L122.087 112.176C125.922 120.004 117.499 128.167 109.794 124.09L65.7318 100.77C63.0982 99.3761 59.9455 99.3761 57.3119 100.77L13.2493 124.09C5.54422 128.167 -2.87801 120.004 0.957055 112.176L53.4395 5.0407Z" fill="#dfdbe6"/>
                 </svg>
             </div>
