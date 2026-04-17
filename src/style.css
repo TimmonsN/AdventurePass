@@ -1,9 +1,15 @@
 body {
   background-color: #2e2d2f;
   margin: 0;
+  max-height: 100dvh;
+  min-height: 100dvh;
 }
 
 h1 {
+  margin: 1dvh;
+}
+
+.compass{
   margin: 0;
 }
 
@@ -11,19 +17,20 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
+  height: 100dvh;
+  max-height: 100dvh;
   margin: 0;
 }
 
-.container div{
+/* .container div{
   margin: 0;
-}
+} */
 
 .text {
   text-align: center;
-  width: 66vw;
+  width: 66dvw;
   color: #dfdbe6;
-  margin-top: 0;
+  margin-bottom: 1dvh;
 }
 
 input {
@@ -35,7 +42,8 @@ input {
   align-items: center;
   justify-content: center;
   flex-grow: 1;
-  width: 100%;
+  width: 100vmin;
+  min-height: 0;
   background-color: #021c48;
   margin: 0;
 }
@@ -44,27 +52,26 @@ input {
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 95%;
   aspect-ratio: 1;
-  width: 95%;
+  max-width: 95%;
   background-color: #540759;
-  margin: 3vh;
-  min-height: 0;
 }
 
 .arrow {
   height: 75%;
   width: 75%;
   transform-origin: 50% 50%;
-  transform: rotate(45deg);
 }
 
 .button {
   background-color: #cac6d0;
   color: #2e2d2f;
   border-radius: 1vh;
-  width: 30vw;
+  width: 30dvw;
   border: none;
   cursor: pointer;
   min-width: 100px;
-  height: 7vh;
+  height: 7dvh;
+  margin: 1dvh;
 }

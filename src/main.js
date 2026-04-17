@@ -20,10 +20,25 @@ export async function perm(){
     var b = event.beta;
     var g = event.gamma;
 
+<<<<<<< Updated upstream
     orientation.innerHTML="a= " + a;
     arrow.setAttribute('style', 'transform:rotate('+ a +'deg);');
     },false)
   }
 }
 
+=======
+    arrow.style.transform = 'rotate(' + a + 'deg)'
+  }
+}
+
+//stop arrow spinning
+export function stop(){
+  start = false;
+  arrow.style.transform = 'rotate(45deg)';
+
+  orientation.innerHTML = "stopped";
+}
+
+>>>>>>> Stashed changes
 main();
