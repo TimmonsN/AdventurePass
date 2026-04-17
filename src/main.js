@@ -17,7 +17,7 @@ export async function perm(){
   orientation.innerHTML = "a";
 
   try {
-    await DeviceOrientationEvent.requestPermission();
+    let permm = await DeviceOrientationEvent.requestPermission();
   } catch (error) {
     console.log("Permission error");
   }
