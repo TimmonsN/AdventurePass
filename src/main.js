@@ -1,4 +1,7 @@
+//variables
 var start = false;
+const arrow = document.getElementById("arrow");
+
 
 function main() {
   document.getElementById("button").addEventListener("click", stop);
@@ -6,9 +9,7 @@ function main() {
 }
 
 export async function perm(){
-  start = true;
-  const arrow = document.getElementById("arrow");
-  
+  start = true;  
   try {
     let permission = await DeviceOrientationEvent.requestPermission();
   } catch (error) {
@@ -16,13 +17,13 @@ export async function perm(){
   }
 
   console.log("it worked");
-  var orientation = document.getElementById("compass");
+  let orientation = document.getElementById("compass");
 
   if (window.DeviceOrientationEvent && start){
     window.addEventListener('deviceorientation', function(event){
-    var a = event.alpha;
-    var b = event.beta;
-    var g = event.gamma;
+    let a = event.alpha;
+    let b = event.beta;
+    let g = event.gamma;
 
     // orientation.innerHTML="a= " + a;
     arrow.setAttribute('style', 'transform:rotate('+ a +'deg);');
