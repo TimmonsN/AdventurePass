@@ -1,6 +1,7 @@
 //variables
 var start = false;
 const arrow = document.getElementById("arrow");
+let orientation = document.getElementById("compass");
 
 //main
 function main() {
@@ -12,9 +13,8 @@ function main() {
 //request permissions
 export async function perm(){
   start = true;
-  
-  let orientation = document.getElementById("compass");
-  orientation.innerHTML="a= " + a;
+
+  orientation.innerHTML = "a= " + a;
 
   try {
     await DeviceOrientationEvent.requestPermission();
@@ -32,8 +32,7 @@ export function rotate(event){
     let b = event.beta;
     let g = event.gamma;
 
-    // let orientation = document.getElementById("compass");
-    // orientation.innerHTML="a= " + a;
+    // orientation.innerHTML = "a= " + a;
 
     arrow.style.transform = 'rotate('+ a +'deg);';
   }
@@ -44,7 +43,6 @@ export function stop(){
   start = false;
   arrow.style.transform = 'rotate(45deg);';
 
-  let orientation = document.getElementById("compass");
   orientation.innerHTML = "stopped";
 }
 
