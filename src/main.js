@@ -14,7 +14,7 @@ function main() {
 export async function perm(){
   start = true;
 
-  orientation.innerHTML = "a";
+  // orientation.innerHTML = "a";
 
   try {
     await DeviceOrientationEvent.requestPermission();
@@ -43,7 +43,7 @@ export function stop(){
   start = false;
   arrow.style.transform = 'rotate(45deg)';
 
-  orientation.innerHTML = "stopped";
+  // orientation.innerHTML = "stopped";
 }
 
 main();
