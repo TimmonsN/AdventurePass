@@ -2,38 +2,50 @@
 var start = false;
 const arrow = document.getElementById("arrow");
 
-
+//main
 function main() {
   document.getElementById("button").addEventListener("click", stop);
-  document.getElementById("destination").addEventListener("click", perm)
+  document.getElementById("destination").addEventListener("click", perm);
+  window.addEventListener('deviceorientation', rotate);
 }
 
+//request permissions
 export async function perm(){
-  start = true;  
-  try {
-    let permission = await DeviceOrientationEvent.requestPermission();
-  } catch (error) {
-    let permission = "granted";
-  }
-
-  console.log("it worked");
+  start = true;
+  
   let orientation = document.getElementById("compass");
+  orientation.innerHTML="a= " + a;
 
+  try {
+    await DeviceOrientationEvent.requestPermission();
+  } catch (error) {
+    console.log("Permission error");
+  }
+}
+
+//rotate arrow
+export function rotate(event){
   if (window.DeviceOrientationEvent && start){
-    window.addEventListener('deviceorientation', function(event){
+    //rotation
     let a = event.alpha;
+    //roll & pitch
     let b = event.beta;
     let g = event.gamma;
 
+    // let orientation = document.getElementById("compass");
     // orientation.innerHTML="a= " + a;
-    arrow.setAttribute('style', 'transform:rotate('+ a +'deg);');
-    },false)
+
+    arrow.style.transform = 'rotate('+ a +'deg);';
   }
 }
 
-export async function stop(){
+//stop arrow spinning
+export function stop(){
   start = false;
-  arrow.setAttribute('style', 'transform:rotate(45deg);');
+  arrow.style.transform = 'rotate(45deg);';
+
+  let orientation = document.getElementById("compass");
+  orientation.innerHTML = "stopped";
 }
 
 main();
