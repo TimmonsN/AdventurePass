@@ -1,9 +1,15 @@
 body {
   background-color: #2e2d2f;
   margin: 0;
+  max-height: 100dvh;
+  min-height: 100dvh;
 }
 
 h1 {
+  margin: 1dvh;
+}
+
+.compass{
   margin: 0;
 }
 
@@ -11,41 +17,62 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
+  height: 100dvh;
+  max-height: 100dvh;
   margin: 0;
 }
 
+/* .container div{
+  margin: 0;
+} */
+
 .text {
-    text-align: center;
-    width: 66vw;
-    color: #dfdbe6;
-    margin-top: 0;
+  text-align: center;
+  width: 66dvw;
+  color: #dfdbe6;
+  margin-bottom: 1dvh;
+}
+
+input {
+  margin: 0;
+  font-size: 16px;
+  text-align: center;
+}
+
+.boxbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  width: 100vmin;
+  min-height: 0;
+  margin: 0;
 }
 
 .arrowbox {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-grow: 1;
+  height: 95%;
   aspect-ratio: 1;
-  background-color: #540759;
-  margin: 3vh;
+  max-width: 95%;
 }
 
 .arrow {
   height: 75%;
   width: 75%;
   transform-origin: 50% 50%;
-  transform: rotate(45deg);
+  opacity: 1;
 }
 
 .button {
   background-color: #cac6d0;
   color: #2e2d2f;
   border-radius: 1vh;
-  width: 30vw;
+  width: 30dvw;
   border: none;
   cursor: pointer;
   min-width: 100px;
-  height: 7vh;
+  height: 7dvh;
+  margin: 1dvh;
 }

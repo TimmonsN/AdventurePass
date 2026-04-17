@@ -1,29 +1,67 @@
+//variables
+var start = false;
+const arrow = document.getElementById("arrow");
+let orientation = document.getElementById("compass");
+
+//main
 function main() {
-    document.getElementById("button").addEventListener("click", perm);
+  document.getElementById("button").addEventListener("click", stop);
+  document.getElementById("destination").addEventListener("click", perm);
+  window.addEventListener('deviceorientation', rotate);
 }
 
+//request permissions
 export async function perm(){
-  const arrow = document.getElementById("arrow");
-  
-  // try {
-  //     let permission = await DeviceOrientationEvent.requestPermission();
-  // } catch (error) {
-  //     let permission = "granted";
-  // }
+  start = true;
 
-  console.log("it worked");
-  var orientation = document.getElementById("compass");
+  // orientation.innerHTML = "a";
 
-  if (window.DeviceOrientationEvent){
-      window.addEventListener('deviceorientation', function(event){
-      var a = event.alpha;
-      var b = event.beta;
-      var g = event.gamma;
-
-      orientation.innerHTML="a= " + a;
-      arrow.setAttribute('style', 'transform:rotate('+ a +'deg);');
-      },false)
+  try {
+    await DeviceOrientationEvent.requestPermission();
+  } catch (error) {
+    console.log("Permission error");
   }
+
+  getLocation();
+}
+
+//rotate arrow
+export function rotate(event){
+  if (window.DeviceOrientationEvent && start){
+    //rotation
+    let a = event.alpha;
+    //roll & pitch
+    let b = event.beta;
+    let g = event.gamma;
+
+    // orientation.innerHTML = "a= " + a;
+
+    arrow.style.transform = 'rotate(' + a + 'deg)';
+  }
+}
+
+//stop arrow spinning
+export function stop(){
+  start = false;
+  arrow.style.transform = 'rotate(45deg)';
+
+  // orientation.innerHTML = "stopped";
+}
+
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(success, error);
+  } else { 
+    // orientation.innerHTML = "Geolocation is not supported by this browser.";
+  }
+}
+
+function success(position) {
+  // orientation.innerHTML = "Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude;
+}
+
+function error() {
+  alert("Sorry, no position available.");
 }
 
 main();
