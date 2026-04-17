@@ -1,5 +1,6 @@
+var start = false;
+
 function main() {
-  var start = false;
   document.getElementById("button").addEventListener("click", stop);
   document.getElementById("destination").addEventListener("click", perm)
 }
