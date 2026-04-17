@@ -34,14 +34,14 @@ export function rotate(event){
 
     // orientation.innerHTML = "a= " + a;
 
-    arrow.style.transform = 'rotate('+ a +'deg);';
+    arrow.style.transform = 'rotate(' + a + 'deg)';
   }
 }
 
 //stop arrow spinning
 export function stop(){
   start = false;
-  arrow.style.transform = 'rotate(65deg);';
+  arrow.style.transform = 'rotate(45deg)';
 
   orientation.innerHTML = "stopped";
 }
