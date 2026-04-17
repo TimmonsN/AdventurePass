@@ -14,7 +14,7 @@ function main() {
 export async function perm(){
   start = true;
 
-  orientation.innerHTML = "a= " + a;
+  orientation.innerHTML = "a";
 
   try {
     await DeviceOrientationEvent.requestPermission();
