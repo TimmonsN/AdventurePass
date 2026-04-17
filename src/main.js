@@ -17,7 +17,7 @@ export async function perm(){
   orientation.innerHTML = "a";
 
   try {
-    let permm = await DeviceOrientationEvent.requestPermission();
+    await DeviceOrientationEvent.requestPermission();
   } catch (error) {
     console.log("Permission error");
   }
@@ -34,14 +34,14 @@ export function rotate(event){
 
     // orientation.innerHTML = "a= " + a;
 
-    arrow.style.transform = 'rotate('+ a +'deg);';
+    arrow.setAttribute('style', 'transform: rotate('+ a +'deg);');
   }
 }
 
 //stop arrow spinning
 export function stop(){
   start = false;
-  arrow.style.transform = 'rotate(45deg);';
+  arrow.setAttribute('style', 'transform: rotate(65deg);');
 
   orientation.innerHTML = "stopped";
 }
