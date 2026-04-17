@@ -46,7 +46,6 @@ input {
   flex-grow: 1;
   width: 100vmin;
   min-height: 0;
-  background-color: #021c48;
   margin: 0;
 }
 
@@ -57,13 +56,13 @@ input {
   height: 95%;
   aspect-ratio: 1;
   max-width: 95%;
-  background-color: #540759;
 }
 
 .arrow {
   height: 75%;
   width: 75%;
   transform-origin: 50% 50%;
+  opacity: 1;
 }
 
 .button {

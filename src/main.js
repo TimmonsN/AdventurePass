@@ -21,6 +21,8 @@ export async function perm(){
   } catch (error) {
     console.log("Permission error");
   }
+
+  getLocation();
 }
 
 //rotate arrow
@@ -44,6 +46,22 @@ export function stop(){
   arrow.style.transform = 'rotate(45deg)';
 
   // orientation.innerHTML = "stopped";
+}
+
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(success, error);
+  } else { 
+    // orientation.innerHTML = "Geolocation is not supported by this browser.";
+  }
+}
+
+function success(position) {
+  // orientation.innerHTML = "Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude;
+}
+
+function error() {
+  alert("Sorry, no position available.");
 }
 
 main();
