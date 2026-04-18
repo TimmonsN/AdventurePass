@@ -5,7 +5,14 @@ let orientation = document.getElementById("compass");
 let origin = {x : 0, y : 0};
 let currentPos = {x : 0, y : 0};
 let theta = 0;
-let originCap = false;
+// originCap removed: success() now always updates currentPos, so no flag is needed
+// to decide which variable to write to
+const options = {
+  enableHighAccuracy: true,
+  // timeout removed: on Mac (and any device without a GPS chip), the 5s timeout was
+  // firing an error callback after every first reading, blocking all further updates
+  maximumAge: 0,
+};
 
 //main
 function main() {
@@ -18,7 +25,8 @@ function main() {
 //request permissions
 export async function perm(){
   start = true;
-  originCap = true;
+  // originCap = false removed: origin is now captured directly below from currentPos,
+  // not through the GPS callback
 
   // orientation.innerHTML = "a";
 
@@ -65,23 +73,19 @@ export function stop(){
 //get current location stream
 function watchLocation() {
   if (navigator.geolocation) {
-    navigator.geolocation.watchPosition(success, error);
+    navigator.geolocation.watchPosition(success, error, options);
   }
 }
     
 //location stream succes var sets
 function success(position) {
-  if(originCap){
-    console.log("origin captured");
-    origin.x = position.coords.longitude;
-    origin.y = position.coords.latitude;
-    originCap = false;
-  } else {
-    console.log("watch started");
-    currentPos.x = position.coords.longitude;
-    currentPos.y = position.coords.latitude;
-  }
-
+  // Always update currentPos on every GPS callback.
+  // Previously this had an if/else that set origin on the first call and currentPos
+  // on all others — meaning currentPos was never populated until the second GPS reading,
+  // which on Mac (WiFi positioning) never came.
+  console.log("position updated");
+  currentPos.x = position.coords.longitude;
+  currentPos.y = position.coords.latitude;
 }
 
 //location stream error
@@ -113,6 +117,9 @@ function findAngle(origin, currentPos){
 
   const deg = rad * (180/Math.PI);
   console.log("theta: " + deg);
+
+  orientation.innerHTML=("origin X: " + origin.x + ",  origin Y: " + origin.y);
+  orientation.innerHTML=("location X: " + currentPos.x + ",  location Y: " + currentPos.y);
 
   return (deg);
 }
