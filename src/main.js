@@ -5,6 +5,7 @@ let orientation = document.getElementById("compass");
 let origin = {x : 0, y : 0};
 let currentPos = {x : 0, y : 0};
 let theta = 0;
+let originCap = false;
 
 //main
 function main() {
@@ -17,6 +18,7 @@ function main() {
 //request permissions
 export async function perm(){
   start = true;
+  originCap = true;
 
   // orientation.innerHTML = "a";
 
@@ -26,7 +28,13 @@ export async function perm(){
     console.log("Permission error");
   }
 
-  await getLocation();
+  if (currentPos.x !== 0) {
+    console.log("origin captured");
+    origin.x = currentPos.x;
+    origin.y = currentPos.y;
+  }
+
+  setInterval(rotate, 100);
 }
 
 //rotate arrow
@@ -54,20 +62,6 @@ export function stop(){
   // orientation.innerHTML = "stopped";
 }
 
-//get origin location
-function getLocation() {
-  return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        origin.x = position.coords.longitude;
-        origin.y = position.coords.latitude;
-        resolve();
-      },
-      reject
-    );
-  });
-}
-
 //get current location stream
 function watchLocation() {
   if (navigator.geolocation) {
@@ -77,9 +71,16 @@ function watchLocation() {
     
 //location stream succes var sets
 function success(position) {
+  if(originCap){
+    console.log("origin captured");
+    origin.x = position.coords.longitude;
+    origin.y = position.coords.latitude;
+    originCap = false;
+  } else {
     console.log("watch started");
     currentPos.x = position.coords.longitude;
     currentPos.y = position.coords.latitude;
+  }
 
 }
 
