@@ -118,9 +118,7 @@ function findAngle(origin, currentPos){
   const deg = rad * (180/Math.PI);
   console.log("theta: " + deg);
 
-  orientation.innerHTML=("origin X: " + origin.x + " <br>origin Y: " + origin.y);
-  orientation.innerHTML=("location X: " + currentPos.x + "<br>location Y: " + currentPos.y);
-
+  orientation.innerHTML=("origin X: " + origin.x + " <br>origin Y: " + origin.y + "<br>location X: " + currentPos.x + "<br>location Y: " + currentPos.y);
   return (deg);
 }
 
