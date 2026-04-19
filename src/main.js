@@ -53,13 +53,13 @@ export function rotate(event){
     let b = event.beta;
     let g = event.gamma;
 
-    // orientation.innerHTML = "head= " + head + "<br>ab= " + ab + "<br>a= " + a;
-
     theta = findAngle(origin, currentPos);
 
     let angle = theta - head;
 
     arrow.style.transform = 'rotate(' + angle + 'deg)';
+
+    orientation.innerHTML = "head= " + head + "<br>theta= " + theta + "<br>angle= " + angle;
   }
 }
 
@@ -120,8 +120,8 @@ function findAngle(origin, currentPos){
 
   console.log("theta: " + deg);
 
-  orientation.innerHTML=("origin lon: " + origin.lon + " <br>origin lat: " + origin.lat + 
-    "<br>location lon: " + currentPos.lon + "<br>location lat: " + currentPos.lat + "<br>theta= " + theta);
+  // orientation.innerHTML=("origin lon: " + origin.lon + " <br>origin lat: " + origin.lat + 
+  //   "<br>location lon: " + currentPos.lon + "<br>location lat: " + currentPos.lat + "<br>theta= " + theta);
   return (deg);
 }
 
