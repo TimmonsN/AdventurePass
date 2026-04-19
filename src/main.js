@@ -2,11 +2,11 @@
 var start = false;
 const arrow = document.getElementById("arrow");
 let orientation = document.getElementById("compass");
-// let origin = {x : 0, y : 0};
+// let origin = {lon : 0, lat : 0};
 
-let origin = {x:39.964679, y:-83.005196};
+let origin = {lat:39.964679, lon:-83.005196};
 
-let currentPos = {x : 0, y : 0};
+let currentPos = {lon : 0, lat : 0};
 let theta = 0;
 const options = {
   enableHighAccuracy: true,
@@ -33,10 +33,10 @@ export async function perm(){
     console.log("Permission error");
   }
 
-  // if (currentPos.x !== 0) {
+  // if (currentPos.lon !== 0) {
   //   console.log("origin captured");
-  //   origin.x = currentPos.x;
-  //   origin.y = currentPos.y;
+  //   origin.lon = currentPos.lon;
+  //   origin.lat = currentPos.lat;
   // }
 
   // setInterval(rotate, 100);
@@ -81,8 +81,8 @@ function watchLocation() {
 //location stream succes var sets
 function success(position) {
   console.log("position updated");
-  currentPos.x = position.coords.longitude;
-  currentPos.y = position.coords.latitude;
+  currentPos.lon = position.coords.longitude;
+  currentPos.lat = position.coords.latitude;
 }
 
 //location stream error
@@ -104,19 +104,19 @@ function error(error) {
 }
 
 function findAngle(origin, currentPos){
-  console.log("origin X: " + origin.x + ",  origin Y: " + origin.y);
-  console.log("location X: " + currentPos.x + ",  location Y: " + currentPos.y);
+  console.log("origin lon: " + origin.lon + ",  origin lat: " + origin.lat);
+  console.log("location lon: " + currentPos.lon + ",  location lat: " + currentPos.lat);
 
-  const dx = origin.x-currentPos.x;
-  const dy = origin.y-currentPos.y;
+  const dx = origin.lon-currentPos.lon;
+  const dy = origin.lat-currentPos.lat;
 
   const rad = Math.atan2(dy, dx);
 
   const deg = rad * (180/Math.PI);
   console.log("theta: " + deg);
 
-  orientation.innerHTML=("origin X: " + origin.x + " <br>origin Y: " + origin.y + 
-    "<br>location X: " + currentPos.x + "<br>location Y: " + currentPos.y + "<br>theta= " + theta);
+  orientation.innerHTML=("origin lon: " + origin.lon + " <br>origin lat: " + origin.lat + 
+    "<br>location lon: " + currentPos.lon + "<br>location lat: " + currentPos.lat + "<br>theta= " + theta);
   return (deg);
 }
 
