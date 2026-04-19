@@ -42,19 +42,20 @@ export async function perm(){
     origin.y = currentPos.y;
   }
 
-  setInterval(rotate, 100);
+  // setInterval(rotate, 100);
 }
 
 //rotate arrow
 export function rotate(event){
   if (window.DeviceOrientationEvent && start){
-    // //rotation
-    // let a = event.alpha;
-    // //roll & pitch
-    // let b = event.beta;
-    // let g = event.gamma;
+    let ab = event.absolute;
+    //rotation
+    let a = event.alpha;
+    //roll & pitch
+    let b = event.beta;
+    let g = event.gamma;
 
-    // orientation.innerHTML = "a= " + a;
+    orientation.innerHTML = "ab= " + ab + "<br>a= " + a;
 
     theta = findAngle(origin, currentPos);
 
