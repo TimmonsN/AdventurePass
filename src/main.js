@@ -57,7 +57,7 @@ export function rotate(event){
 
     theta = findAngle(origin, currentPos);
 
-    let angle = theta + head;
+    let angle = theta - head;
 
     arrow.style.transform = 'rotate(' + angle + 'deg)';
   }
