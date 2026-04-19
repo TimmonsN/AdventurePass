@@ -4,7 +4,7 @@ const arrow = document.getElementById("arrow");
 let orientation = document.getElementById("compass");
 // let origin = {lon : 0, lat : 0};
 
-let origin = {lat:39.964679, lon:-83.005196};
+let origin = {lat:42.189127, lon:-87.803320};
 
 let currentPos = {lon : 0, lat : 0};
 let theta = 0;
