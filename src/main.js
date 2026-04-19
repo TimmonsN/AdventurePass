@@ -5,12 +5,8 @@ let orientation = document.getElementById("compass");
 let origin = {x : 0, y : 0};
 let currentPos = {x : 0, y : 0};
 let theta = 0;
-// originCap removed: success() now always updates currentPos, so no flag is needed
-// to decide which variable to write to
 const options = {
   enableHighAccuracy: true,
-  // timeout removed: on Mac (and any device without a GPS chip), the 5s timeout was
-  // firing an error callback after every first reading, blocking all further updates
   maximumAge: 0,
 };
 
@@ -25,8 +21,6 @@ function main() {
 //request permissions
 export async function perm(){
   start = true;
-  // originCap = false removed: origin is now captured directly below from currentPos,
-  // not through the GPS callback
 
   // orientation.innerHTML = "a";
 
@@ -48,6 +42,7 @@ export async function perm(){
 //rotate arrow
 export function rotate(event){
   if (window.DeviceOrientationEvent && start){
+    let head = event.webkitCompassHeading;
     let ab = event.absolute;
     //rotation
     let a = event.alpha;
@@ -55,7 +50,7 @@ export function rotate(event){
     let b = event.beta;
     let g = event.gamma;
 
-    orientation.innerHTML = "ab= " + ab + "<br>a= " + a;
+    orientation.innerHTML = "head= " + head + "<br>ab= " + ab + "<br>a= " + a;
 
     theta = findAngle(origin, currentPos);
 
@@ -80,10 +75,6 @@ function watchLocation() {
     
 //location stream succes var sets
 function success(position) {
-  // Always update currentPos on every GPS callback.
-  // Previously this had an if/else that set origin on the first call and currentPos
-  // on all others — meaning currentPos was never populated until the second GPS reading,
-  // which on Mac (WiFi positioning) never came.
   console.log("position updated");
   currentPos.x = position.coords.longitude;
   currentPos.y = position.coords.latitude;
