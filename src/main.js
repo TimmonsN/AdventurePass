@@ -2,7 +2,10 @@
 var start = false;
 const arrow = document.getElementById("arrow");
 let orientation = document.getElementById("compass");
-let origin = {x : 0, y : 0};
+// let origin = {x : 0, y : 0};
+
+let origin = {x:39.993747, y:-83.013684};
+
 let currentPos = {x : 0, y : 0};
 let theta = 0;
 const options = {
@@ -30,11 +33,11 @@ export async function perm(){
     console.log("Permission error");
   }
 
-  if (currentPos.x !== 0) {
-    console.log("origin captured");
-    origin.x = currentPos.x;
-    origin.y = currentPos.y;
-  }
+  // if (currentPos.x !== 0) {
+  //   console.log("origin captured");
+  //   origin.x = currentPos.x;
+  //   origin.y = currentPos.y;
+  // }
 
   // setInterval(rotate, 100);
 }
