@@ -50,11 +50,13 @@ export function rotate(event){
     let b = event.beta;
     let g = event.gamma;
 
-    orientation.innerHTML = "head= " + head + "<br>ab= " + ab + "<br>a= " + a;
+    // orientation.innerHTML = "head= " + head + "<br>ab= " + ab + "<br>a= " + a;
 
     theta = findAngle(origin, currentPos);
 
-    arrow.style.transform = 'rotate(' + theta + 'deg)';
+    let angle = theta - head;
+
+    arrow.style.transform = 'rotate(' + angle + 'deg)';
   }
 }
 
