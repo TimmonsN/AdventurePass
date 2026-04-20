@@ -46,18 +46,20 @@ export async function perm(){
 //rotate arrow
 export function rotate(event){
   if (window.DeviceOrientationEvent && start){
-    let head = event.webkitCompassHeading;
-    let ab = event.absolute;
-    //rotation
-    let a = event.alpha;
-    //roll & pitch
-    let b = event.beta;
-    let g = event.gamma;
-
     theta = findAngle(origin, currentPos);
-
-    let angle = theta - head;
-
+    let ab = event.absolute;
+    if(ab){//android
+      //rotation
+      let a = event.alpha;
+      //roll & pitch
+      let b = event.beta;
+      let g = event.gamma;
+      let angle = theta - a;
+    } else {//ios
+      let head = event.webkitCompassHeading;
+      let angle = theta - head;
+    }
+   
     arrow.style.transform = 'rotate(' + angle + 'deg)';
 
     madeIt(currentPos, origin);
