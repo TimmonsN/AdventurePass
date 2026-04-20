@@ -3,9 +3,9 @@ var start = false;
 const arrow = document.getElementById("arrow");
 let orientation = document.getElementById("compass");
 const body = document.getElementById("body");
-// let origin = {lon : 0, lat : 0};
+let origin = {lon : 0, lat : 0};
 
-let origin = {lat:39.995378, lon:-83.011820};
+// let origin = {lat:39.995378, lon:-83.011820};
 
 let currentPos = {lon : 0, lat : 0};
 let theta = 0;
@@ -34,11 +34,11 @@ export async function perm(){
     console.log("Permission error");
   }
 
-  // if (currentPos.lon !== 0) {
-  //   console.log("origin captured");
-  //   origin.lon = currentPos.lon;
-  //   origin.lat = currentPos.lat;
-  // }
+  if (currentPos.lon !== 0) {
+    console.log("origin captured");
+    origin.lon = currentPos.lon;
+    origin.lat = currentPos.lat;
+  }
 
   // setInterval(rotate, 100);
 }
