@@ -136,7 +136,7 @@ function madeIt(){
 
   let here = (lon && lat);
 
-  if(true){
+  if(here){
     start = false;
     body.style.background = '#6fd179';
     changeImage()
