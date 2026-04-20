@@ -29,10 +29,11 @@ function main() {
 
 //request permissions
 export async function perm(){
-  console.log("perm");
+  // console.log("perm");
   reset();
   start = true;
   exited = false;
+  changeImage("toArrow");
   // orientation.innerHTML = "a";
 
   try {
@@ -50,7 +51,8 @@ export function rotate(event){
     theta = findAngle(origin, currentPos);
     let ab = event.absolute;
     let angle = 0;
-    if(ab){//android
+    if(ab){//android - note: 'deviceorientation' almost always fires with absolute: false on Android.
+      // For true north-referenced heading on Android, add a separate listener for 'deviceorientationabsolute'.
       //rotation
       let a = event.alpha;
       //roll & pitch
@@ -87,7 +89,7 @@ function watchLocation() {
     
 //location stream succes var sets
 function success(position) {
-  console.log("position updated");
+  // console.log("position updated");
   currentPos.lon = position.coords.longitude;
   currentPos.lat = position.coords.latitude;
 }
@@ -112,8 +114,8 @@ function error(error) {
 
 //the math for the angle of the arrow (arc tan of the right triangle formed between the two coords)
 function findAngle(origin, currentPos){
-  console.log("origin lon: " + origin.lon + ",  origin lat: " + origin.lat);
-  console.log("location lon: " + currentPos.lon + ",  location lat: " + currentPos.lat);
+  // console.log("origin lon: " + origin.lon + ",  origin lat: " + origin.lat);
+  // console.log("location lon: " + currentPos.lon + ",  location lat: " + currentPos.lat);
 
   const dx = origin.lon-currentPos.lon;
   const dy = origin.lat-currentPos.lat;
@@ -123,7 +125,7 @@ function findAngle(origin, currentPos){
   let deg = rad * (180/Math.PI);
   deg = (90 - deg + 360) % 360;
 
-  console.log("theta: " + deg);
+  // console.log("theta: " + deg);
 
   // orientation.innerHTML=("origin lon: " + origin.lon + " <br>origin lat: " + origin.lat + 
   //   "<br>location lon: " + currentPos.lon + "<br>location lat: " + currentPos.lat + "<br>theta= " + theta);
@@ -140,16 +142,26 @@ function madeIt(){
   if(here){
     start = false;
     body.style.background = '#6fd179';
-    changeImage()
+    changeImage("toCirlce");
   }
 }
 
 //switches arrow to cirlce
-function changeImage() {
-  console.log("change image");
+function changeImage(which) {
+  // console.log("change image");
   const circle = document.getElementById('circle');
-  arrow.classList.toggle('hidden');
-  circle.classList.toggle('hidden');
+  switch (which) {
+    case "toArrow":
+      arrow.classList.remove('hidden');
+      circle.classList.add('hidden');
+      break;
+    case "toCirlce":
+      arrow.classList.add('hidden');
+      circle.classList.remove('hidden');
+      break;
+    default:
+      console.log("Error Switching Images");
+  }
 }
 
 //destination setting
@@ -184,9 +196,9 @@ function search(){
 
 //reset screen
 function reset(){
-  console.log("reset");
+  // console.log("reset");
   body.style.background = '#2d2f2d';
-  changeImage()
+  changeImage("toCirlce");
 }
 
 main();
