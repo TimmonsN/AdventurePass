@@ -2,6 +2,7 @@
 var start = false;
 const arrow = document.getElementById("arrow");
 let orientation = document.getElementById("compass");
+const body = document.getElementById("body");
 // let origin = {lon : 0, lat : 0};
 
 let origin = {lat:39.995378, lon:-83.011820};
@@ -58,6 +59,8 @@ export function rotate(event){
     let angle = theta - head;
 
     arrow.style.transform = 'rotate(' + angle + 'deg)';
+
+    madeIt(currentPos, origin);
 
     // orientation.innerHTML = "head= " + head + "<br>theta= " + theta + "<br>angle= " + angle;
   }
@@ -124,6 +127,19 @@ function findAngle(origin, currentPos){
   // orientation.innerHTML=("origin lon: " + origin.lon + " <br>origin lat: " + origin.lat + 
   //   "<br>location lon: " + currentPos.lon + "<br>location lat: " + currentPos.lat + "<br>theta= " + theta);
   return (deg);
+}
+
+//check if at correct location and change display if so
+function madeIt(){
+  let lon = (origin.lon.toFixed(5) == currentPos.lon.toFixed(5));
+  let lat = (origin.lat.toFixed(5) == currentPos.lat.toFixed(5));
+
+  let here = (lon && lat);
+
+  if(here){
+    start = false;
+    body.style.background = '49dc62';
+  }
 }
 
 main();
