@@ -3,9 +3,11 @@ var start = false;
 const arrow = document.getElementById("arrow");
 let orientation = document.getElementById("compass");
 const body = document.getElementById("body");
-// let origin = {lon : 0, lat : 0};
+const destination = document.getElementById("destination");
+let origin = {lon : 0, lat : 0};
+let exited = true;
 
-let origin = {lat:39.995378, lon:-83.011820};
+// let origin = {lat:39.995378, lon:-83.011820};
 
 let currentPos = {lon : 0, lat : 0};
 let theta = 0;
@@ -17,15 +19,21 @@ const options = {
 //main
 function main() {
   document.getElementById("button").addEventListener("click", stop);
-  document.getElementById("destination").addEventListener("click", perm);
   window.addEventListener('deviceorientation', rotate);
+  document.getElementById('form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    search();
+  });
   watchLocation();
 }
 
 //request permissions
 export async function perm(){
+  // console.log("perm");
+  reset();
   start = true;
-
+  exited = false;
+  changeImage("toArrow");
   // orientation.innerHTML = "a";
 
   try {
@@ -34,30 +42,28 @@ export async function perm(){
     console.log("Permission error");
   }
 
-  // if (currentPos.lon !== 0) {
-  //   console.log("origin captured");
-  //   origin.lon = currentPos.lon;
-  //   origin.lat = currentPos.lat;
-  // }
-
   // setInterval(rotate, 100);
 }
 
 //rotate arrow
 export function rotate(event){
   if (window.DeviceOrientationEvent && start){
-    let head = event.webkitCompassHeading;
-    let ab = event.absolute;
-    //rotation
-    let a = event.alpha;
-    //roll & pitch
-    let b = event.beta;
-    let g = event.gamma;
-
     theta = findAngle(origin, currentPos);
-
-    let angle = theta - head;
-
+    let ab = event.absolute;
+    let angle = 0;
+    if(ab){//android - note: 'deviceorientation' almost always fires with absolute: false on Android.
+      // For true north-referenced heading on Android, add a separate listener for 'deviceorientationabsolute'.
+      //rotation
+      let a = event.alpha;
+      //roll & pitch
+      let b = event.beta;
+      let g = event.gamma;
+      angle = theta - a;
+    } else {//ios
+      let head = event.webkitCompassHeading;
+      angle = theta - head;
+    }
+   
     arrow.style.transform = 'rotate(' + angle + 'deg)';
 
     madeIt(currentPos, origin);
@@ -69,8 +75,8 @@ export function rotate(event){
 //stop arrow spinning
 export function stop(){
   start = false;
-  arrow.style.transform = 'rotate(45deg)';
-
+  exited = true;
+  reset();
   // orientation.innerHTML = "stopped";
 }
 
@@ -83,7 +89,7 @@ function watchLocation() {
     
 //location stream succes var sets
 function success(position) {
-  console.log("position updated");
+  // console.log("position updated");
   currentPos.lon = position.coords.longitude;
   currentPos.lat = position.coords.latitude;
 }
@@ -106,9 +112,10 @@ function error(error) {
   }
 }
 
+//the math for the angle of the arrow (arc tan of the right triangle formed between the two coords)
 function findAngle(origin, currentPos){
-  console.log("origin lon: " + origin.lon + ",  origin lat: " + origin.lat);
-  console.log("location lon: " + currentPos.lon + ",  location lat: " + currentPos.lat);
+  // console.log("origin lon: " + origin.lon + ",  origin lat: " + origin.lat);
+  // console.log("location lon: " + currentPos.lon + ",  location lat: " + currentPos.lat);
 
   const dx = origin.lon-currentPos.lon;
   const dy = origin.lat-currentPos.lat;
@@ -116,13 +123,9 @@ function findAngle(origin, currentPos){
   let rad = Math.atan2(dy, dx);
   
   let deg = rad * (180/Math.PI);
-  deg = 90 - deg + 360;
+  deg = (90 - deg + 360) % 360;
 
-  // if (currentPos.lon - origin.lon < 0){
-  //   deg += 180;
-  // }
-
-  console.log("theta: " + deg);
+  // console.log("theta: " + deg);
 
   // orientation.innerHTML=("origin lon: " + origin.lon + " <br>origin lat: " + origin.lat + 
   //   "<br>location lon: " + currentPos.lon + "<br>location lat: " + currentPos.lat + "<br>theta= " + theta);
@@ -139,14 +142,63 @@ function madeIt(){
   if(here){
     start = false;
     body.style.background = '#6fd179';
-    changeImage()
+    changeImage("toCirlce");
   }
 }
 
-function changeImage() {
+//switches arrow to cirlce
+function changeImage(which) {
+  // console.log("change image");
   const circle = document.getElementById('circle');
-  arrow.classList.toggle('hidden');
-  circle.classList.toggle('hidden');
+  switch (which) {
+    case "toArrow":
+      arrow.classList.remove('hidden');
+      circle.classList.add('hidden');
+      break;
+    case "toCirlce":
+      arrow.classList.add('hidden');
+      circle.classList.remove('hidden');
+      break;
+    default:
+      console.log("Error Switching Images");
+  }
+}
+
+//destination setting
+function search(){
+  //e.preventDefault(); // Prevents page reload
+  if(exited){
+    const capturedText = destination.value;
+    let flipLon = 1;
+    let flipLat = 1;
+
+    let coords = capturedText.split(",");
+
+    if(coords[1].includes('W') || coords[1].includes('w')){
+      flipLon = -1;
+    }
+    if(coords[0].includes('S') || coords[0].includes('s')){
+      flipLat = -1;
+    }
+
+    let regex = /([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))?/i;
+    let inLat = coords[0].match(regex);
+    let inLon = coords[1].match(regex);
+
+
+    origin.lat = Number(inLat[0]) * flipLat;
+    origin.lon = Number(inLon[0]) * flipLon;
+    console.log("O lat: " + origin.lat + " |O lon: " + origin.lon);
+
+    perm();
+  }
+}
+
+//reset screen
+function reset(){
+  // console.log("reset");
+  body.style.background = '#2d2f2d';
+  changeImage("toCirlce");
 }
 
 main();
