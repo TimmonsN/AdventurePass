@@ -3,9 +3,9 @@ var start = false;
 const arrow = document.getElementById("arrow");
 let orientation = document.getElementById("compass");
 const body = document.getElementById("body");
-let origin = {lon : 0, lat : 0};
+// let origin = {lon : 0, lat : 0};
 
-// let origin = {lat:39.995378, lon:-83.011820};
+let origin = {lat:39.995378, lon:-83.011820};
 
 let currentPos = {lon : 0, lat : 0};
 let theta = 0;
@@ -34,11 +34,11 @@ export async function perm(){
     console.log("Permission error");
   }
 
-  if (currentPos.lon !== 0) {
-    console.log("origin captured");
-    origin.lon = currentPos.lon;
-    origin.lat = currentPos.lat;
-  }
+  // if (currentPos.lon !== 0) {
+  //   console.log("origin captured");
+  //   origin.lon = currentPos.lon;
+  //   origin.lat = currentPos.lat;
+  // }
 
   // setInterval(rotate, 100);
 }
@@ -46,19 +46,19 @@ export async function perm(){
 //rotate arrow
 export function rotate(event){
   if (window.DeviceOrientationEvent && start){
-    let head = event.webkitCompassHeading;
-    let ab = event.absolute;
-    //rotation
-    let a = event.alpha;
-    //roll & pitch
-    let b = event.beta;
-    let g = event.gamma;
+    // let head = event.webkitCompassHeading;
+    // let ab = event.absolute;
+    // //rotation
+    // let a = event.alpha;
+    // //roll & pitch
+    // let b = event.beta;
+    // let g = event.gamma;
 
     theta = findAngle(origin, currentPos);
 
-    let angle = theta - head;
+    // let angle = theta - head;
 
-    arrow.style.transform = 'rotate(' + angle + 'deg)';
+    arrow.style.transform = 'rotate(' + theta + 'deg)';
 
     madeIt(currentPos, origin);
 
@@ -136,9 +136,34 @@ function madeIt(){
 
   let here = (lon && lat);
 
-  if(here){
+  if(true){
     start = false;
-    body.style.background = '49dc62';
+    body.style.background = '#6fd179';
+    changeImage()
+  }
+}
+
+function changeImage() {
+  const circle = document.getElementById('circle');
+  const hidden = 'hidden';
+  const display = 'arrow';
+
+  if (circle.classList.contains('hidden')) {
+    // circle is hidden
+    // displaying
+    circle.classList.add(display);
+    circle.classList.remove(hidden);
+    // hiding
+    arrow.classList.add(hidden);
+    arrow.classList.remove(display);
+  } else {
+    // arrow is hidden
+    // displaying
+    arrow.classList.add(display);
+    arrow.classList.remove(hidden);
+    // hiding
+    circle.classList.add(hidden);
+    circle.classList.remove(display);
   }
 }
 

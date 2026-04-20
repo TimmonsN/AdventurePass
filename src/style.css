@@ -65,6 +65,10 @@ input {
   opacity: 1;
 }
 
+.circle{
+  display: none;
+}
+
 .button {
   background-color: #cac6d0;
   color: #2e2d2f;
