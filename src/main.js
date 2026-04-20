@@ -2,6 +2,7 @@
 var start = false;
 const arrow = document.getElementById("arrow");
 let orientation = document.getElementById("compass");
+const body = document.getElementById("body");
 // let origin = {lon : 0, lat : 0};
 
 let origin = {lat:39.995378, lon:-83.011820};
@@ -45,19 +46,21 @@ export async function perm(){
 //rotate arrow
 export function rotate(event){
   if (window.DeviceOrientationEvent && start){
-    let head = event.webkitCompassHeading;
-    let ab = event.absolute;
-    //rotation
-    let a = event.alpha;
-    //roll & pitch
-    let b = event.beta;
-    let g = event.gamma;
+    // let head = event.webkitCompassHeading;
+    // let ab = event.absolute;
+    // //rotation
+    // let a = event.alpha;
+    // //roll & pitch
+    // let b = event.beta;
+    // let g = event.gamma;
 
     theta = findAngle(origin, currentPos);
 
-    let angle = theta - head;
+    // let angle = theta - head;
 
-    arrow.style.transform = 'rotate(' + angle + 'deg)';
+    arrow.style.transform = 'rotate(' + theta + 'deg)';
+
+    madeIt(currentPos, origin);
 
     // orientation.innerHTML = "head= " + head + "<br>theta= " + theta + "<br>angle= " + angle;
   }
@@ -124,6 +127,26 @@ function findAngle(origin, currentPos){
   // orientation.innerHTML=("origin lon: " + origin.lon + " <br>origin lat: " + origin.lat + 
   //   "<br>location lon: " + currentPos.lon + "<br>location lat: " + currentPos.lat + "<br>theta= " + theta);
   return (deg);
+}
+
+//check if at correct location and change display if so
+function madeIt(){
+  let lon = (origin.lon.toFixed(5) == currentPos.lon.toFixed(5));
+  let lat = (origin.lat.toFixed(5) == currentPos.lat.toFixed(5));
+
+  let here = (lon && lat);
+
+  if(here){
+    start = false;
+    body.style.background = '#6fd179';
+    changeImage()
+  }
+}
+
+function changeImage() {
+  const circle = document.getElementById('circle');
+  arrow.classList.toggle('hidden');
+  circle.classList.toggle('hidden');
 }
 
 main();

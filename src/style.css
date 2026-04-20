@@ -1,5 +1,5 @@
 body {
-  background-color: #2e2d2f;
+  background-color: #2d2f2d;
   margin: 0;
   max-height: 100dvh;
   min-height: 100dvh;
@@ -63,6 +63,10 @@ input {
   width: 75%;
   transform-origin: 50% 50%;
   opacity: 1;
+}
+
+.hidden{
+  display: none;
 }
 
 .button {
