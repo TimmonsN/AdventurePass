@@ -41,12 +41,6 @@ export async function perm(){
     console.log("Permission error");
   }
 
-  // if (currentPos.lon !== 0) {
-  //   console.log("origin captured");
-  //   origin.lon = currentPos.lon;
-  //   origin.lat = currentPos.lat;
-  // }
-
   // setInterval(rotate, 100);
 }
 
@@ -116,6 +110,7 @@ function error(error) {
   }
 }
 
+//the math for the angle of the arrow (arc tan of the right triangle formed between the two coords)
 function findAngle(origin, currentPos){
   console.log("origin lon: " + origin.lon + ",  origin lat: " + origin.lat);
   console.log("location lon: " + currentPos.lon + ",  location lat: " + currentPos.lat);
@@ -127,10 +122,6 @@ function findAngle(origin, currentPos){
   
   let deg = rad * (180/Math.PI);
   deg = (90 - deg + 360) % 360;
-
-  // if (currentPos.lon - origin.lon < 0){
-  //   deg += 180;
-  // }
 
   console.log("theta: " + deg);
 
@@ -166,16 +157,25 @@ function search(){
   //e.preventDefault(); // Prevents page reload
   if(exited){
     const capturedText = destination.value;
+    let flipLon = 1;
+    let flipLat = 1;
 
     let coords = capturedText.split(",");
+
+    if(coords[1].includes('W') || coords[1].includes('w')){
+      flipLon = -1;
+    }
+    if(coords[0].includes('S') || coords[0].includes('s')){
+      flipLat = -1;
+    }
 
     let regex = /([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))?/i;
     let inLat = coords[0].match(regex);
     let inLon = coords[1].match(regex);
 
 
-    origin.lat = Number(inLat[0]);
-    origin.lon = Number(inLon[0]);
+    origin.lat = Number(inLat[0]) * flipLat;
+    origin.lon = Number(inLon[0]) * flipLon;
     console.log("O lat: " + origin.lat + " |O lon: " + origin.lon);
 
     perm();
