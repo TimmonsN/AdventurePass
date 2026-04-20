@@ -112,7 +112,8 @@ function findAngle(origin, currentPos){
 
   let rad = Math.atan2(dy, dx);
   
-  let deg = rad * (180/Math.PI) - 90;
+  let deg = rad * (180/Math.PI);
+  deg = 90 - deg + 360;
 
   // if (currentPos.lon - origin.lon < 0){
   //   deg += 180;
