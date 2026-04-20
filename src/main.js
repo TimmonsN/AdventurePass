@@ -59,7 +59,7 @@ export function rotate(event){
 
     arrow.style.transform = 'rotate(' + angle + 'deg)';
 
-    orientation.innerHTML = "head= " + head + "<br>theta= " + theta + "<br>angle= " + angle;
+    // orientation.innerHTML = "head= " + head + "<br>theta= " + theta + "<br>angle= " + angle;
   }
 }
 
