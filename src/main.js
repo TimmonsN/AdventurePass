@@ -2,12 +2,24 @@
 var start = false;
 const arrow = document.getElementById("arrow");
 let orientation = document.getElementById("compass");
+const body = document.getElementById("body");
+// let origin = {lon : 0, lat : 0};
+
+let origin = {lat:39.995378, lon:-83.011820};
+
+let currentPos = {lon : 0, lat : 0};
+let theta = 0;
+const options = {
+  enableHighAccuracy: true,
+  maximumAge: 0,
+};
 
 //main
 function main() {
   document.getElementById("button").addEventListener("click", stop);
   document.getElementById("destination").addEventListener("click", perm);
   window.addEventListener('deviceorientation', rotate);
+  watchLocation();
 }
 
 //request permissions
@@ -22,21 +34,35 @@ export async function perm(){
     console.log("Permission error");
   }
 
-  getLocation();
+  // if (currentPos.lon !== 0) {
+  //   console.log("origin captured");
+  //   origin.lon = currentPos.lon;
+  //   origin.lat = currentPos.lat;
+  // }
+
+  // setInterval(rotate, 100);
 }
 
 //rotate arrow
 export function rotate(event){
   if (window.DeviceOrientationEvent && start){
-    //rotation
-    let a = event.alpha;
-    //roll & pitch
-    let b = event.beta;
-    let g = event.gamma;
+    // let head = event.webkitCompassHeading;
+    // let ab = event.absolute;
+    // //rotation
+    // let a = event.alpha;
+    // //roll & pitch
+    // let b = event.beta;
+    // let g = event.gamma;
 
-    // orientation.innerHTML = "a= " + a;
+    theta = findAngle(origin, currentPos);
 
-    arrow.style.transform = 'rotate(' + a + 'deg)';
+    // let angle = theta - head;
+
+    arrow.style.transform = 'rotate(' + theta + 'deg)';
+
+    madeIt(currentPos, origin);
+
+    // orientation.innerHTML = "head= " + head + "<br>theta= " + theta + "<br>angle= " + angle;
   }
 }
 
@@ -48,20 +74,79 @@ export function stop(){
   // orientation.innerHTML = "stopped";
 }
 
-function getLocation() {
+//get current location stream
+function watchLocation() {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(success, error);
-  } else { 
-    // orientation.innerHTML = "Geolocation is not supported by this browser.";
+    navigator.geolocation.watchPosition(success, error, options);
+  }
+}
+    
+//location stream succes var sets
+function success(position) {
+  console.log("position updated");
+  currentPos.lon = position.coords.longitude;
+  currentPos.lat = position.coords.latitude;
+}
+
+//location stream error
+function error(error) {
+  switch(error.code) {
+    case error.PERMISSION_DENIED:
+      console.log("User denied the request for Geolocation.")
+      break;
+    case error.POSITION_UNAVAILABLE:
+      console.log("Location information is unavailable.")
+      break;
+    case error.TIMEOUT:
+      console.log("The request to get user location timed out.")
+      break;
+    case error.UNKNOWN_ERROR:
+      console.log("An unknown error occurred.")
+      break;
   }
 }
 
-function success(position) {
-  // orientation.innerHTML = "Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude;
+function findAngle(origin, currentPos){
+  console.log("origin lon: " + origin.lon + ",  origin lat: " + origin.lat);
+  console.log("location lon: " + currentPos.lon + ",  location lat: " + currentPos.lat);
+
+  const dx = origin.lon-currentPos.lon;
+  const dy = origin.lat-currentPos.lat;
+
+  let rad = Math.atan2(dy, dx);
+  
+  let deg = rad * (180/Math.PI);
+  deg = 90 - deg + 360;
+
+  // if (currentPos.lon - origin.lon < 0){
+  //   deg += 180;
+  // }
+
+  console.log("theta: " + deg);
+
+  // orientation.innerHTML=("origin lon: " + origin.lon + " <br>origin lat: " + origin.lat + 
+  //   "<br>location lon: " + currentPos.lon + "<br>location lat: " + currentPos.lat + "<br>theta= " + theta);
+  return (deg);
 }
 
-function error() {
-  alert("Sorry, no position available.");
+//check if at correct location and change display if so
+function madeIt(){
+  let lon = (origin.lon.toFixed(5) == currentPos.lon.toFixed(5));
+  let lat = (origin.lat.toFixed(5) == currentPos.lat.toFixed(5));
+
+  let here = (lon && lat);
+
+  if(here){
+    start = false;
+    body.style.background = '#6fd179';
+    changeImage()
+  }
+}
+
+function changeImage() {
+  const circle = document.getElementById('circle');
+  arrow.classList.toggle('hidden');
+  circle.classList.toggle('hidden');
 }
 
 main();
