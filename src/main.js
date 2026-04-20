@@ -52,16 +52,17 @@ export function rotate(event){
   if (window.DeviceOrientationEvent && start){
     theta = findAngle(origin, currentPos);
     let ab = event.absolute;
+    let angle = 0;
     if(ab){//android
       //rotation
       let a = event.alpha;
       //roll & pitch
       let b = event.beta;
       let g = event.gamma;
-      let angle = theta - a;
+      angle = theta - a;
     } else {//ios
       let head = event.webkitCompassHeading;
-      let angle = theta - head;
+      angle = theta - head;
     }
    
     arrow.style.transform = 'rotate(' + angle + 'deg)';
