@@ -110,13 +110,13 @@ function findAngle(origin, currentPos){
   const dx = origin.lon-currentPos.lon;
   const dy = origin.lat-currentPos.lat;
 
-  let rad = Math.atan(dy, dx);
+  let rad = Math.atan2(dy, dx);
   
   let deg = rad * (180/Math.PI) - 90;
 
-  if (currentPos.lon - origin.lon < 0){
-    deg += 180;
-  }
+  // if (currentPos.lon - origin.lon < 0){
+  //   deg += 180;
+  // }
 
   console.log("theta: " + deg);
 
