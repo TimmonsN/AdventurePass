@@ -145,26 +145,8 @@ function madeIt(){
 
 function changeImage() {
   const circle = document.getElementById('circle');
-  const hidden = 'hidden';
-  const display = 'arrow';
-
-  if (circle.classList.contains('hidden')) {
-    // circle is hidden
-    // displaying
-    circle.classList.add(display);
-    circle.classList.remove(hidden);
-    // hiding
-    arrow.classList.add(hidden);
-    arrow.classList.remove(display);
-  } else {
-    // arrow is hidden
-    // displaying
-    arrow.classList.add(display);
-    arrow.classList.remove(hidden);
-    // hiding
-    circle.classList.add(hidden);
-    circle.classList.remove(display);
-  }
+  arrow.classList.toggle('hidden');
+  circle.classList.toggle('hidden');
 }
 
 main();
