@@ -5,6 +5,7 @@ let orientation = document.getElementById("compass");
 const body = document.getElementById("body");
 const destination = document.getElementById("destination");
 let origin = {lon : 0, lat : 0};
+let exited = true;
 
 // let origin = {lat:39.995378, lon:-83.011820};
 
@@ -28,8 +29,10 @@ function main() {
 
 //request permissions
 export async function perm(){
+  console.log("perm");
+  reset();
   start = true;
-
+  exited = false;
   // orientation.innerHTML = "a";
 
   try {
@@ -76,8 +79,8 @@ export function rotate(event){
 //stop arrow spinning
 export function stop(){
   start = false;
-  arrow.style.transform = 'rotate(45deg)';
-
+  exited = true;
+  reset();
   // orientation.innerHTML = "stopped";
 }
 
@@ -152,6 +155,7 @@ function madeIt(){
 
 //switches arrow to cirlce
 function changeImage() {
+  console.log("change image");
   const circle = document.getElementById('circle');
   arrow.classList.toggle('hidden');
   circle.classList.toggle('hidden');
@@ -160,21 +164,29 @@ function changeImage() {
 //destination setting
 function search(){
   //e.preventDefault(); // Prevents page reload
+  if(exited){
+    const capturedText = destination.value;
 
-  const capturedText = destination.value;
+    let coords = capturedText.split(",");
 
-  let coords = capturedText.split(",");
-
-  let regex = /([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))?/i;
-  let inLat = coords[0].match(regex);
-  let inLon = coords[1].match(regex);
+    let regex = /([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))?/i;
+    let inLat = coords[0].match(regex);
+    let inLon = coords[1].match(regex);
 
 
-  origin.lat = Number(inLat[0]);
-  origin.lon = Number(inLon[0]);
-  console.log("O lat: " + origin.lat + " |O lon: " + origin.lon);
+    origin.lat = Number(inLat[0]);
+    origin.lon = Number(inLon[0]);
+    console.log("O lat: " + origin.lat + " |O lon: " + origin.lon);
 
-  perm();
+    perm();
+  }
+}
+
+//reset screen
+function reset(){
+  console.log("reset");
+  body.style.background = '#2d2f2d';
+  changeImage()
 }
 
 main();

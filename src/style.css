@@ -65,6 +65,11 @@ input {
   opacity: 1;
 }
 
+.circle{
+  height: 45%;
+  width: 45%;
+}
+
 .hidden{
   display: none;
 }
