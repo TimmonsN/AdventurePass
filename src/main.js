@@ -164,9 +164,13 @@ function search(){
 
   let coords = capturedText.split(",");
 
+  let regex = /([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))?/i;
+  let inLat = coords[0].match(regex);
+  let inLon = coords[1].match(regex);
 
-  origin.lat = Number(coords[0].trim());
-  origin.lon = Number(coords[1].trim());
+
+  origin.lat = Number(inLat[0]);
+  origin.lon = Number(inLon[0]);
   console.log("O lat: " + origin.lat + " |O lon: " + origin.lon);
 
   perm();
