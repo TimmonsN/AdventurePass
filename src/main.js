@@ -19,7 +19,10 @@ const options = {
 function main() {
   document.getElementById("button").addEventListener("click", stop);
   window.addEventListener('deviceorientation', rotate);
-  document.getElementById('form').addEventListener('submit', search);
+  document.getElementById('form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    search();
+  });
   watchLocation();
 }
 
@@ -155,7 +158,7 @@ function changeImage() {
 
 //destination setting
 function search(){
-  e.preventDefault(); // Prevents page reload
+  //e.preventDefault(); // Prevents page reload
 
   const capturedText = destination.value;
 
@@ -164,6 +167,7 @@ function search(){
 
   origin.lat = Number(coords[0].trim());
   origin.lon = Number(coords[1].trim());
+  console.log("O lat: " + origin.lat + " |O lon: " + origin.lon);
 
   perm();
 }
