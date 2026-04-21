@@ -77,6 +77,7 @@ export function stop(){
   start = false;
   exited = true;
   reset();
+  destination.value = "";
   // orientation.innerHTML = "stopped";
 }
 
@@ -144,7 +145,7 @@ function madeIt(){
   // 6	0.000001	0° 00′ 0.0036″	individual humans	111 mm
   // 7	0.0000001	0° 00′ 0.00036″	practical limit of commercial surveying	11.1 mm
   // 8	0.00000001	0° 00′ 0.000036″	specialized surveying	1.11 mm
-  let percision = 4;
+  let percision = 4; //after testing 4 seems best
   let lon = (origin.lon.toFixed(percision) == currentPos.lon.toFixed(percision));
   let lat = (origin.lat.toFixed(percision) == currentPos.lat.toFixed(percision));
 
