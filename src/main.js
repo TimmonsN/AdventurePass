@@ -1,5 +1,11 @@
+// FUTURE TO-DOS
+// madeIt() arrival zone isnt radius?
+// Android, add deviceorientationabsolute event listener 
+// Dropdown tap outside dismissal
+// pressing Enter does nothing if exited=false, should behave same as clicking a suggestion
+
 //variables
-var start = false;
+let start = false;
 const arrow = document.getElementById("arrow");
 let orientation = document.getElementById("compass");
 const body = document.getElementById("body");
@@ -34,9 +40,10 @@ function main() {
 //sends user input off to api for autocomplete
 function api(input){
   if(!input.trim()) return; // don't fire on empty input
+  if(input.trim().length < 3) return; //dont fire on less than 3 chars
   if(fetchController) fetchController.abort(); // cancel any previous in-flight fetch
   fetchController = new AbortController();
-  fetch("https://api.geoapify.com/v1/geocode/autocomplete?text=" + input + "&apiKey=7e89b21189e34400aeec411151299ea8&limit=5", { signal: fetchController.signal })
+  fetch("https://api.geoapify.com/v1/geocode/autocomplete?text=" + encodeURIComponent(input) + "&apiKey=7e89b21189e34400aeec411151299ea8&limit=5", { signal: fetchController.signal })
     .then(response => response.json())
     .then(result => {
       suggestions = result.features;
@@ -111,7 +118,7 @@ export function rotate(event){
    
     arrow.style.transform = 'rotate(' + angle + 'deg)';
 
-    madeIt(currentPos, origin);
+    madeIt();
 
     // orientation.innerHTML = "head= " + head + "<br>theta= " + theta + "<br>angle= " + angle;
   }
@@ -182,8 +189,19 @@ function findAngle(origin, currentPos){
 
 //check if at correct location and change display if so
 function madeIt(){
-  let lon = (origin.lon.toFixed(5) == currentPos.lon.toFixed(5));
-  let lat = (origin.lat.toFixed(5) == currentPos.lat.toFixed(5));
+  // decimal|places	decimal degrees|DMS|Object that can be unambiguously recognized at this scale|N/S or E/W at equator
+  // 0	1.0	1° 00′ 0″	country or large region	111 km
+  // 1	0.1	0° 06′ 0″	large city or district	11.1 km
+  // 2	0.01	0° 00′ 36″	town or village	1.11 km
+  // 3	0.001	0° 00′ 3.6″	neighborhood, street	111 m
+  // 4	0.0001	0° 00′ 0.36″	individual street, large buildings	11.1 m
+  // 5	0.00001	0° 00′ 0.036″	individual trees, houses	1.11 m
+  // 6	0.000001	0° 00′ 0.0036″	individual humans	111 mm
+  // 7	0.0000001	0° 00′ 0.00036″	practical limit of commercial surveying	11.1 mm
+  // 8	0.00000001	0° 00′ 0.000036″	specialized surveying	1.11 mm
+  let percision = 4;
+  let lon = (origin.lon.toFixed(percision) == currentPos.lon.toFixed(percision));
+  let lat = (origin.lat.toFixed(percision) == currentPos.lat.toFixed(percision));
 
   let here = (lon && lat);
 

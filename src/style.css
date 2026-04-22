@@ -38,6 +38,7 @@ input {
   font-size: 16px;
   text-align: center;
   width: 100%;
+  box-sizing: border-box;
 }
 
 /* anchor point for the absolute dropdown */
