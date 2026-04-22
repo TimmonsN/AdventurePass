@@ -1,11 +1,20 @@
+// FUTURE TO-DOS
+// madeIt() arrival zone isnt radius?
+// Android, add deviceorientationabsolute event listener 
+// Dropdown tap outside dismissal
+// pressing Enter does nothing if exited=false, should behave same as clicking a suggestion
+
 //variables
-var start = false;
+let start = false;
 const arrow = document.getElementById("arrow");
 let orientation = document.getElementById("compass");
 const body = document.getElementById("body");
 const destination = document.getElementById("destination");
 let origin = {lon : 0, lat : 0};
 let exited = true;
+let timer;
+let suggestions = [];
+let fetchController = null;
 
 // let origin = {lat:39.995378, lon:-83.011820};
 
@@ -24,7 +33,50 @@ function main() {
     e.preventDefault();
     search();
   });
+  destination.addEventListener('input', () => {clearTimeout(timer); timer = setTimeout(() => {api(destination.value);}, 200)});
   watchLocation();
+}
+
+//sends user input off to api for autocomplete
+function api(input){
+  if(!input.trim()) return; // don't fire on empty input
+  if(input.trim().length < 3) return; //dont fire on less than 3 chars
+  if(fetchController) fetchController.abort(); // cancel any previous in-flight fetch
+  fetchController = new AbortController();
+  fetch("https://api.geoapify.com/v1/geocode/autocomplete?text=" + encodeURIComponent(input) + "&apiKey=7e89b21189e34400aeec411151299ea8&limit=5", { signal: fetchController.signal })
+    .then(response => response.json())
+    .then(result => {
+      suggestions = result.features;
+      renderDropdown(suggestions);
+    })
+    .catch(error => {
+      if(error.name !== 'AbortError') console.log('error', error); // ignore intentional cancellations
+    });
+}
+
+// builds dropdown items from api results
+function renderDropdown(features){
+  const dropdown = document.getElementById('dropdown');
+  dropdown.innerHTML = '';
+  features.forEach((feature) => {
+    let item = document.createElement('div');
+    item.textContent = feature.properties.formatted;
+    item.addEventListener('click', () => select(feature));
+    dropdown.appendChild(item);
+  });
+}
+
+// sets origin from a selected feature and starts navigation
+function select(feature){
+  if(fetchController) fetchController.abort();
+  origin.lat = feature.properties.lat;
+  origin.lon = feature.properties.lon;
+  destination.value = feature.properties.formatted;
+  clearTimeout(timer);
+  suggestions = [];
+  document.getElementById('dropdown').innerHTML = '';
+  destination.blur();
+  perm();
 }
 
 //request permissions
@@ -66,7 +118,7 @@ export function rotate(event){
    
     arrow.style.transform = 'rotate(' + angle + 'deg)';
 
-    madeIt(currentPos, origin);
+    madeIt();
 
     // orientation.innerHTML = "head= " + head + "<br>theta= " + theta + "<br>angle= " + angle;
   }
@@ -76,6 +128,9 @@ export function rotate(event){
 export function stop(){
   start = false;
   exited = true;
+  destination.value = '';
+  suggestions = [];
+  document.getElementById('dropdown').innerHTML = '';
   reset();
   destination.value = "";
   // orientation.innerHTML = "stopped";
@@ -145,7 +200,9 @@ function madeIt(){
   // 6	0.000001	0° 00′ 0.0036″	individual humans	111 mm
   // 7	0.0000001	0° 00′ 0.00036″	practical limit of commercial surveying	11.1 mm
   // 8	0.00000001	0° 00′ 0.000036″	specialized surveying	1.11 mm
+  
   let percision = 4; //after testing 4 seems best
+
   let lon = (origin.lon.toFixed(percision) == currentPos.lon.toFixed(percision));
   let lat = (origin.lat.toFixed(percision) == currentPos.lat.toFixed(percision));
 
@@ -176,33 +233,10 @@ function changeImage(which) {
   }
 }
 
-//destination setting
+//destination setting — selects top suggestion on Enter
 function search(){
-  //e.preventDefault(); // Prevents page reload
-  if(exited){
-    const capturedText = destination.value;
-    let flipLon = 1;
-    let flipLat = 1;
-
-    let coords = capturedText.split(",");
-
-    if(coords[1].includes('W') || coords[1].includes('w')){
-      flipLon = -1;
-    }
-    if(coords[0].includes('S') || coords[0].includes('s')){
-      flipLat = -1;
-    }
-
-    let regex = /([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))?/i;
-    let inLat = coords[0].match(regex);
-    let inLon = coords[1].match(regex);
-
-
-    origin.lat = Number(inLat[0]) * flipLat;
-    origin.lon = Number(inLon[0]) * flipLon;
-    console.log("O lat: " + origin.lat + " |O lon: " + origin.lon);
-
-    perm();
+  if(exited && suggestions.length > 0){
+    select(suggestions[0]);
   }
 }
 
