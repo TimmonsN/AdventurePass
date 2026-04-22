@@ -6,6 +6,9 @@ const body = document.getElementById("body");
 const destination = document.getElementById("destination");
 let origin = {lon : 0, lat : 0};
 let exited = true;
+let timer;
+let suggestions = []; // stores latest API results for use on Enter
+let fetchController = null; // tracks in-flight fetch so it can be cancelled
 
 // let origin = {lat:39.995378, lon:-83.011820};
 
@@ -24,7 +27,42 @@ function main() {
     e.preventDefault();
     search();
   });
+  destination.addEventListener('input', () => {clearTimeout(timer); timer = setTimeout(() => {api(destination.value);}, 200)});
   watchLocation();
+}
+
+function api(input){
+  fetch("https://api.geoapify.com/v1/geocode/autocomplete?text=" + input + "&apiKey=7e89b21189e34400aeec411151299ea8&limit=5")
+    .then(response => response.json())
+    .then(result => {
+      suggestions = result.features; // cache for Enter key use
+      renderDropdown(suggestions);
+    })
+    .catch(error => console.log('error', error));
+}
+
+// builds dropdown items from API results
+function renderDropdown(features){
+  const dropdown = document.getElementById('dropdown');
+  dropdown.innerHTML = ''; // clear previous results
+  features.forEach((feature) => {
+    let item = document.createElement('div');
+    item.textContent = feature.properties.formatted;
+    item.addEventListener('click', () => select(feature)); // tap to navigate
+    dropdown.appendChild(item);
+  });
+}
+
+// sets origin from a selected feature and starts navigation
+function select(feature){
+  origin.lat = feature.properties.lat;
+  origin.lon = feature.properties.lon;
+  destination.value = feature.properties.formatted;  // fill input with selection
+  clearTimeout(timer);                                // prevent input event from re-triggering API
+  suggestions = [];                                   // clear so stale results can't re-fire
+  document.getElementById('dropdown').innerHTML = ''; // close dropdown
+  destination.blur();                                  // deselect input so it stops listening
+  perm();
 }
 
 //request permissions
@@ -164,33 +202,10 @@ function changeImage(which) {
   }
 }
 
-//destination setting
+//destination setting — selects top suggestion on Enter
 function search(){
-  //e.preventDefault(); // Prevents page reload
-  if(exited){
-    const capturedText = destination.value;
-    let flipLon = 1;
-    let flipLat = 1;
-
-    let coords = capturedText.split(",");
-
-    if(coords[1].includes('W') || coords[1].includes('w')){
-      flipLon = -1;
-    }
-    if(coords[0].includes('S') || coords[0].includes('s')){
-      flipLat = -1;
-    }
-
-    let regex = /([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[Ee]([+-]?\d+))?/i;
-    let inLat = coords[0].match(regex);
-    let inLon = coords[1].match(regex);
-
-
-    origin.lat = Number(inLat[0]) * flipLat;
-    origin.lon = Number(inLon[0]) * flipLon;
-    console.log("O lat: " + origin.lat + " |O lon: " + origin.lon);
-
-    perm();
+  if(exited && suggestions.length > 0){
+    select(suggestions[0]);
   }
 }
 

@@ -37,6 +37,34 @@ input {
   margin: 0;
   font-size: 16px;
   text-align: center;
+  width: 100%;
+}
+
+/* anchor point for the absolute dropdown */
+#form {
+  position: relative;
+}
+
+/* floats on top of page, doesn't affect layout */
+.dropdown {
+  position: absolute;
+  width: 100%;
+  background: #3d3f3d;
+  border-radius: 0.5vh;
+  z-index: 10;
+}
+
+/* individual suggestion items */
+.dropdown div {
+  color: #dfdbe6;
+  padding: 8px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 14px;
+}
+
+.dropdown div:hover {
+  background: #4d4f4d;
 }
 
 .boxbox {
