@@ -7,8 +7,8 @@ const destination = document.getElementById("destination");
 let origin = {lon : 0, lat : 0};
 let exited = true;
 let timer;
-let suggestions = []; // stores latest API results for use on Enter
-let fetchController = null; // tracks in-flight fetch so it can be cancelled
+let suggestions = [];
+let fetchController = null;
 
 // let origin = {lat:39.995378, lon:-83.011820};
 
@@ -31,37 +31,44 @@ function main() {
   watchLocation();
 }
 
+//sends user input off to api for autocomplete
 function api(input){
-  fetch("https://api.geoapify.com/v1/geocode/autocomplete?text=" + input + "&apiKey=7e89b21189e34400aeec411151299ea8&limit=5")
+  if(!input.trim()) return; // don't fire on empty input
+  if(fetchController) fetchController.abort(); // cancel any previous in-flight fetch
+  fetchController = new AbortController();
+  fetch("https://api.geoapify.com/v1/geocode/autocomplete?text=" + input + "&apiKey=7e89b21189e34400aeec411151299ea8&limit=5", { signal: fetchController.signal })
     .then(response => response.json())
     .then(result => {
-      suggestions = result.features; // cache for Enter key use
+      suggestions = result.features;
       renderDropdown(suggestions);
     })
-    .catch(error => console.log('error', error));
+    .catch(error => {
+      if(error.name !== 'AbortError') console.log('error', error); // ignore intentional cancellations
+    });
 }
 
-// builds dropdown items from API results
+// builds dropdown items from api results
 function renderDropdown(features){
   const dropdown = document.getElementById('dropdown');
-  dropdown.innerHTML = ''; // clear previous results
+  dropdown.innerHTML = '';
   features.forEach((feature) => {
     let item = document.createElement('div');
     item.textContent = feature.properties.formatted;
-    item.addEventListener('click', () => select(feature)); // tap to navigate
+    item.addEventListener('click', () => select(feature));
     dropdown.appendChild(item);
   });
 }
 
 // sets origin from a selected feature and starts navigation
 function select(feature){
+  if(fetchController) fetchController.abort();
   origin.lat = feature.properties.lat;
   origin.lon = feature.properties.lon;
-  destination.value = feature.properties.formatted;  // fill input with selection
-  clearTimeout(timer);                                // prevent input event from re-triggering API
-  suggestions = [];                                   // clear so stale results can't re-fire
-  document.getElementById('dropdown').innerHTML = ''; // close dropdown
-  destination.blur();                                  // deselect input so it stops listening
+  destination.value = feature.properties.formatted;
+  clearTimeout(timer);
+  suggestions = [];
+  document.getElementById('dropdown').innerHTML = '';
+  destination.blur();
   perm();
 }
 
@@ -114,6 +121,9 @@ export function rotate(event){
 export function stop(){
   start = false;
   exited = true;
+  destination.value = '';
+  suggestions = [];
+  document.getElementById('dropdown').innerHTML = '';
   reset();
   // orientation.innerHTML = "stopped";
 }
