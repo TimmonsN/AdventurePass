@@ -132,6 +132,7 @@ export function stop(){
   suggestions = [];
   document.getElementById('dropdown').innerHTML = '';
   reset();
+  destination.value = "";
   // orientation.innerHTML = "stopped";
 }
 
@@ -189,9 +190,9 @@ function findAngle(origin, currentPos){
 
 //check if at correct location and change display if so
 function madeIt(){
-  // decimal|places	decimal degrees|DMS|Object that can be unambiguously recognized at this scale|N/S or E/W at equator
+  // decimal places|decimal degrees|DMS|Object that can be unambiguously recognized at this scale|N/S or E/W at equator
   // 0	1.0	1° 00′ 0″	country or large region	111 km
-  // 1	0.1	0° 06′ 0″	large city or district	11.1 km
+  // 1	0.1	0° 06′ 0″	large city or district	11.1
   // 2	0.01	0° 00′ 36″	town or village	1.11 km
   // 3	0.001	0° 00′ 3.6″	neighborhood, street	111 m
   // 4	0.0001	0° 00′ 0.36″	individual street, large buildings	11.1 m
@@ -199,7 +200,9 @@ function madeIt(){
   // 6	0.000001	0° 00′ 0.0036″	individual humans	111 mm
   // 7	0.0000001	0° 00′ 0.00036″	practical limit of commercial surveying	11.1 mm
   // 8	0.00000001	0° 00′ 0.000036″	specialized surveying	1.11 mm
-  let percision = 4;
+  
+  let percision = 4; //after testing 4 seems best
+
   let lon = (origin.lon.toFixed(percision) == currentPos.lon.toFixed(percision));
   let lat = (origin.lat.toFixed(percision) == currentPos.lat.toFixed(percision));
 
