@@ -29,6 +29,7 @@ const options = {
 function main() {
   document.getElementById("button").addEventListener("click", stop);
   window.addEventListener('deviceorientation', rotate);
+  window.addEventListener('deviceorientationabsolute', rotate);// android north-referenced heading
   document.getElementById('form').addEventListener('submit', (e) => {
     e.preventDefault();
     search();
