@@ -27,22 +27,34 @@ function main() {
     e.preventDefault();
     search();
   });
-  destination.addEventListener('input', () => {clearTimeout(timer); timer = setTimeout(() => {api(destination.value);}, 200)});
+  destination.addEventListener('input', () => {
+    console.log('[input] keystroke fired, value: "' + destination.value + '"');
+    clearTimeout(timer);
+    timer = setTimeout(() => {api(destination.value);}, 200)
+  });
   watchLocation();
 }
 
 function api(input){
-  fetch("https://api.geoapify.com/v1/geocode/autocomplete?text=" + input + "&apiKey=7e89b21189e34400aeec411151299ea8&limit=5")
+  if(!input.trim()) return; // don't fire on empty input
+  if(fetchController) fetchController.abort(); // cancel any previous in-flight fetch
+  fetchController = new AbortController();
+  console.log('[api] fetch fired for: "' + input + '"');
+  fetch("https://api.geoapify.com/v1/geocode/autocomplete?text=" + input + "&apiKey=7e89b21189e34400aeec411151299ea8&limit=5", { signal: fetchController.signal })
     .then(response => response.json())
     .then(result => {
-      suggestions = result.features; // cache for Enter key use
+      console.log('[api] response received, ' + result.features.length + ' results');
+      suggestions = result.features;
       renderDropdown(suggestions);
     })
-    .catch(error => console.log('error', error));
+    .catch(error => {
+      if(error.name !== 'AbortError') console.log('error', error); // ignore intentional cancellations
+    });
 }
 
 // builds dropdown items from API results
 function renderDropdown(features){
+  console.log('[renderDropdown] called with ' + features.length + ' items');
   const dropdown = document.getElementById('dropdown');
   dropdown.innerHTML = ''; // clear previous results
   features.forEach((feature) => {
@@ -51,17 +63,21 @@ function renderDropdown(features){
     item.addEventListener('click', () => select(feature)); // tap to navigate
     dropdown.appendChild(item);
   });
+  console.log('[renderDropdown] done, dropdown now has ' + dropdown.children.length + ' children');
 }
 
 // sets origin from a selected feature and starts navigation
 function select(feature){
+  console.log('[select] called with: ' + feature.properties.formatted);
+  if(fetchController) fetchController.abort(); // kill any in-flight fetch so it can't repopulate dropdown
   origin.lat = feature.properties.lat;
   origin.lon = feature.properties.lon;
-  destination.value = feature.properties.formatted;  // fill input with selection
-  clearTimeout(timer);                                // prevent input event from re-triggering API
-  suggestions = [];                                   // clear so stale results can't re-fire
-  document.getElementById('dropdown').innerHTML = ''; // close dropdown
-  destination.blur();                                  // deselect input so it stops listening
+  destination.value = feature.properties.formatted;
+  clearTimeout(timer);
+  suggestions = [];
+  document.getElementById('dropdown').innerHTML = '';
+  destination.blur();
+  console.log('[select] dropdown cleared, timer cancelled, blurred');
   perm();
 }
 
@@ -114,6 +130,9 @@ export function rotate(event){
 export function stop(){
   start = false;
   exited = true;
+  destination.value = '';
+  suggestions = [];
+  document.getElementById('dropdown').innerHTML = '';
   reset();
   // orientation.innerHTML = "stopped";
 }
@@ -204,6 +223,7 @@ function changeImage(which) {
 
 //destination setting — selects top suggestion on Enter
 function search(){
+  console.log('[search] called, exited=' + exited + ', suggestions.length=' + suggestions.length);
   if(exited && suggestions.length > 0){
     select(suggestions[0]);
   }
