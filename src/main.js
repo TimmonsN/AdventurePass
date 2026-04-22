@@ -7,8 +7,8 @@ const destination = document.getElementById("destination");
 let origin = {lon : 0, lat : 0};
 let exited = true;
 let timer;
-let suggestions = []; // stores latest API results for use on Enter
-let fetchController = null; // tracks in-flight fetch so it can be cancelled
+let suggestions = [];
+let fetchController = null;
 
 // let origin = {lat:39.995378, lon:-83.011820};
 
@@ -27,23 +27,18 @@ function main() {
     e.preventDefault();
     search();
   });
-  destination.addEventListener('input', () => {
-    console.log('[input] keystroke fired, value: "' + destination.value + '"');
-    clearTimeout(timer);
-    timer = setTimeout(() => {api(destination.value);}, 200)
-  });
+  destination.addEventListener('input', () => {clearTimeout(timer); timer = setTimeout(() => {api(destination.value);}, 200)});
   watchLocation();
 }
 
+//sends user input off to api for autocomplete
 function api(input){
   if(!input.trim()) return; // don't fire on empty input
   if(fetchController) fetchController.abort(); // cancel any previous in-flight fetch
   fetchController = new AbortController();
-  console.log('[api] fetch fired for: "' + input + '"');
   fetch("https://api.geoapify.com/v1/geocode/autocomplete?text=" + input + "&apiKey=7e89b21189e34400aeec411151299ea8&limit=5", { signal: fetchController.signal })
     .then(response => response.json())
     .then(result => {
-      console.log('[api] response received, ' + result.features.length + ' results');
       suggestions = result.features;
       renderDropdown(suggestions);
     })
@@ -52,24 +47,21 @@ function api(input){
     });
 }
 
-// builds dropdown items from API results
+// builds dropdown items from api results
 function renderDropdown(features){
-  console.log('[renderDropdown] called with ' + features.length + ' items');
   const dropdown = document.getElementById('dropdown');
-  dropdown.innerHTML = ''; // clear previous results
+  dropdown.innerHTML = '';
   features.forEach((feature) => {
     let item = document.createElement('div');
     item.textContent = feature.properties.formatted;
-    item.addEventListener('click', () => select(feature)); // tap to navigate
+    item.addEventListener('click', () => select(feature));
     dropdown.appendChild(item);
   });
-  console.log('[renderDropdown] done, dropdown now has ' + dropdown.children.length + ' children');
 }
 
 // sets origin from a selected feature and starts navigation
 function select(feature){
-  console.log('[select] called with: ' + feature.properties.formatted);
-  if(fetchController) fetchController.abort(); // kill any in-flight fetch so it can't repopulate dropdown
+  if(fetchController) fetchController.abort();
   origin.lat = feature.properties.lat;
   origin.lon = feature.properties.lon;
   destination.value = feature.properties.formatted;
@@ -77,7 +69,6 @@ function select(feature){
   suggestions = [];
   document.getElementById('dropdown').innerHTML = '';
   destination.blur();
-  console.log('[select] dropdown cleared, timer cancelled, blurred');
   perm();
 }
 
@@ -223,7 +214,6 @@ function changeImage(which) {
 
 //destination setting — selects top suggestion on Enter
 function search(){
-  console.log('[search] called, exited=' + exited + ', suggestions.length=' + suggestions.length);
   if(exited && suggestions.length > 0){
     select(suggestions[0]);
   }
